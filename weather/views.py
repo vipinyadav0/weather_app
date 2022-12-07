@@ -9,22 +9,17 @@ from decouple import config
 
 def home(request):
     API= config('API_KEY')
-    print(API)
-    url = f'https://api.openweathermap.org/data/2.5/weather?q=las%20vegas&units=imperial&appid={API}'
-    print(url)
-    city = "Las vegas"
-    city_weather = requests.get(url.format(city)).json()
+
+    url = 'https://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid={}'
+    cities = City.objects.all()
     if request.method == 'POST': # only true if form is submitted
         form = CityForm(request.POST) # add actual request data to form for processing
         form.save() # will validate and save if validate
     form = CityForm()
-    
-    cities = City.objects.all()
     weather_data = []
 
     for city in cities:
-
-        city_weather = requests.get(url.format(city)).json() #request the API data and convert the JSON to Python data types
+        city_weather = requests.get(url.format(city, API)).json() #request the API data and convert the JSON to Python data types
 
         weather = {
             'city' : city,

@@ -3,10 +3,15 @@ from django.views import View
 import requests
 from .models import City
 from .forms import CityForm
+from decouple import config
 # Create your views here.
 
+
 def home(request):
-    url = "https://api.openweathermap.org/data/2.5/weather?q=las%20vegas&units=imperial&appid=d71da0aca1d0c06fae26e1b1dc434022"
+    API= config('API_KEY')
+    print(API)
+    url = f'https://api.openweathermap.org/data/2.5/weather?q=las%20vegas&units=imperial&appid={API}'
+    print(url)
     city = "Las vegas"
     city_weather = requests.get(url.format(city)).json()
     if request.method == 'POST': # only true if form is submitted
@@ -38,4 +43,3 @@ def home(request):
         'form': form
 }
     return render(request, 'weather/index.html', context)
-    
